@@ -45,9 +45,10 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libsqlite3-dev gapc curl zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libffi-dev libssl-dev
+        sudo apt-get install -y libsqlite3-dev curl zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libffi-dev libssl-dev
         python -m pip install --upgrade pip
         pip install "Cython>=3.0.0,<3.1.0" buildozer
+
 
     - name: Build with Buildozer
       run: |
