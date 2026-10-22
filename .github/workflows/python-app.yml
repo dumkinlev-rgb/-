@@ -18,6 +18,18 @@ jobs:
         echo "date=$(date -u +'%Y%m%d')" >> $GITHUB_OUTPUT
       shell: bash
 
+    # ШАГ 1: Освобождаем место на жестком диске виртуальной машины GitHub
+    - name: Free Disk Space (Ubuntu)
+      uses: jlumbroso/free-disk-space@v1.3.1
+      with:
+        tool-cache: false
+        android: false # встроенный SDK не нужен, buildozer скачает свой
+        dotnet: true
+        haskell: true
+        large-packages: true
+        docker-images: true
+        swap-storage: true
+
     - name: Cache Buildozer
       uses: actions/cache@v4
       with:
@@ -29,12 +41,13 @@ jobs:
       with:
         python-version: '3.11'
 
+    # ШАГ 2: Ставим необходимые пакеты Ubuntu для компиляции и правильную версию Cython
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libsqlite3-dev
-        pip install --upgrade pip
-        pip install Cython==0.29.33 buildozer
+        sudo apt-get install -y libsqlite3-dev gapc curl zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libffi-dev libssl-dev
+        python -m pip install --upgrade pip
+        pip install "Cython>=3.0.0,<3.1.0" buildozer
 
     - name: Build with Buildozer
       run: |
@@ -45,4 +58,3 @@ jobs:
       with:
         name: audio-reverb-apk
         path: bin/*.apk
-        
